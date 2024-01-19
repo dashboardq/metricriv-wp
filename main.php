@@ -42,7 +42,7 @@ class MetricRiv {
 	public $cpt;
 	public $metricriv;
 
-	public $hook_numbers;
+	public $hook_metrics;
 	public $hook_settings;
 
 	public function __construct() {
@@ -87,20 +87,20 @@ class MetricRiv {
 	}
 
 	public function adminEnqueueScripts($hook) {
-		if(in_array($hook, [$this->hook_numbers, $this->hook_settings])) {
+		if(in_array($hook, [$this->hook_metrics, $this->hook_settings])) {
 			wp_enqueue_script($this->key_ . 'admin_ajax_form', plugins_url('js/admin_ajax_form.js', __FILE__), ['jquery'], $this->version);
 			wp_enqueue_style($this->key_ . 'admin_ajax_form', plugins_url('css/admin_ajax_form.css', __FILE__), [], $this->version);
 		}
 	}
 
 	public function adminMenu() {
-		$this->hook_numbers = add_menu_page('MetricRiv', 'MetricRiv', 'manage_options', $this->key_ . 'numbers', [$this, 'adminMetrics'], 'dashicons-admin-post', 30);
+		$this->hook_metrics = add_menu_page('MetricRiv', 'MetricRiv', 'manage_options', $this->key_ . 'metrics', [$this, 'adminMetrics'], 'dashicons-admin-post', 30);
 
-        add_submenu_page($this->key_ . 'numbers', 'Metrics', 'Metrics', 'manage_options', $this->key_ . 'numbers');
-        $this->hook_numbers = add_submenu_page($this->key_ . 'numbers', 'Settings', 'Settings', 'manage_options', $this->key_ . 'settings', [$this, 'adminSettings']);
+        add_submenu_page($this->key_ . 'metrics', 'Metrics', 'Metrics', 'manage_options', $this->key_ . 'metrics');
+        $this->hook_metrics = add_submenu_page($this->key_ . 'metrics', 'Settings', 'Settings', 'manage_options', $this->key_ . 'settings', [$this, 'adminSettings']);
 
         $cpt_link = 'edit.php?post_type=' . $this->key_ . 'key';
-        add_submenu_page($this->key_ . 'numbers', 'Keys', 'Keys', 'manage_options', $cpt_link);
+        add_submenu_page($this->key_ . 'metrics', 'Keys', 'Keys', 'manage_options', $cpt_link);
 	}
 
 	public function adminMetrics() {
