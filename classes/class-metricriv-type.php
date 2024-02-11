@@ -160,17 +160,45 @@ class MetricRiv_Type {
 			'delete_post'        => $this->cap,
 		);  
 		$labels = array(
-			'name'               => __( $this->plural ),
-			'singular_name'      => __( $this->singular ),
-			'add_new'            => __( 'Add New' ),
-			'add_new_item'       => __( 'Add New ' . $this->singular ),
-			'edit_item'          => __( 'Edit ' . $this->singular ),
-			'new_item'           => __( 'New ' . $this->singular ),
-			'all_items'          => __( $this->plural ),
-			'view_item'          => __( 'View ' . $this->singular ),
-			'search_items'       => __( 'Search ' . $this->plural ),
-			'not_found'          => __( 'No ' . $this->plural . ' found' ),
-			'not_found_in_trash' => __( 'No ' . $this->plural . ' found in the Trash' ),
+			'name'               => esc_html( $this->plural ),
+			'singular_name'      => esc_html( $this->singular ),
+			'add_new'            => esc_html__( 'Add New', 'metricriv' ),
+            'add_new_item'       => sprintf(
+                /* translators: %s: Singular name of an item */
+                esc_html__( 'Add New %s', 'metricriv' ),
+                esc_html( $this->singular )
+            ),
+            'edit_item'       => sprintf(
+                /* translators: %s: Singular name of an item */
+                esc_html__( 'Edit %s', 'metricriv' ),
+                esc_html( $this->singular )
+            ),
+            'new_item'       => sprintf(
+                /* translators: %s: Singular name of an item */
+                esc_html__( 'New %s', 'metricriv' ),
+                esc_html( $this->singular )
+            ),
+			'all_items'          => esc_html( $this->plural ),
+            'view_item'       => sprintf(
+                /* translators: %s: Singular name of an item */
+                esc_html__( 'View %s', 'metricriv' ),
+                esc_html( $this->singular )
+            ),
+            'search_items'       => sprintf(
+                /* translators: %s: Plural name of an item */
+                esc_html__( 'Search %s', 'metricriv' ),
+                esc_html( $this->plural )
+            ),
+            'not_found'       => sprintf(
+                /* translators: %s: Plural name of an item */
+                esc_html__( 'No %s found', 'metricriv' ),
+                esc_html( $this->plural )
+            ),
+            'not_found_in_trash'       => sprintf(
+                /* translators: %s: Plural name of an item */
+                esc_html__( 'No %s found in the Trash', 'metricriv' ),
+                esc_html( $this->plural )
+            ),
 			'parent_item_colon'  => '',
 			'menu_name'          => $this->plural
 		);

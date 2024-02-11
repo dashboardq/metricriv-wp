@@ -10,6 +10,7 @@ Tags: metrics, stats, revenue, report, woocommerce, statistics, metricriv
 Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: metricriv
 
 Provides overall stats and metrics for your site and also provides the ability to create a connection with MetricRiv.com.
 
@@ -31,6 +32,9 @@ Be careful to keep the MetricRiv keys private. Anyone with access to the keys wi
 5. Copy the key and use it when setting up a WordPress connection on MetricRiv.com.
 
 == Changelog ==
+
+= 1.1.0 =
+* Updates from review
 
 = 1.0.0 =
 * Initial release

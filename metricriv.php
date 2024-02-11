@@ -5,7 +5,10 @@ Description: Provides a connection between WordPress and MetricRiv.com.
 Author: Anthony Graddy
 Author URI: https://www.dashboardq.com
 Plugin URI: https://github.com/dashboardq/metricriv-wp
-Version: 1.0.0
+Version: 1.1.0
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: metricriv
 */
 
 defined('ABSPATH') || exit;
@@ -37,7 +40,7 @@ require_once(__DIR__ . '/classes/class-metricriv-data-wp-users.php');
 class MetricRiv {
 	public $key = 'metricriv';
 	public $key_ = 'metricriv_';
-	public $version = '1.0.0';
+	public $version = '1.1.0';
 
 	public $cpt;
 	public $metricriv;
@@ -51,26 +54,27 @@ class MetricRiv {
 		$this->cpt = new MetricRiv_CPT();
 		$this->cpt->config('key', $this->key);
 
-		$this->metricriv = $this->cpt->create('MetricRiv Key', 'MetricRiv Keys', 'manage_options', ['show_in_menu' => false]);
-		$this->metricriv->add('text', 'Key');
+		$this->metricriv = $this->cpt->create('MetricRiv ' . __( 'Key', 'metricriv' ), 'MetricRiv ' . __( 'Keys', 'metricriv' ), 'manage_options', ['show_in_menu' => false]);
+		$this->metricriv->add('text', __( 'Key', 'metricriv' ));
 
 		$this->metricriv->column->add('cb');
-        $this->metricriv->column->add('__fn', 'Instructions', function($post_id) {
+        $this->metricriv->column->add('__fn', __( 'Instructions', 'metricriv' ), function($post_id) {
             $htm = '';
-            $htm .= 'Copy this key and add it to the <a href="https://www.metricriv.com/number/add" target="_blank">MetricRiv.com connection form</a>.';
+            //$htm .= 'Copy this key and add it to the <a href="https://www.metricriv.com/number/add" target="_blank">MetricRiv.com connection form</a>.';
+            $htm .= sprintf( '%s <a href="https://www.metricriv.com/number/add" target="_blank">%s</a>.', esc_html__( 'Copy this key and add it to the', 'metricriv' ), esc_html__( 'MetricRiv.com connection form', 'metricriv' )  );
             return $htm;
         });
         $this->metricriv->column->add('__html', 'Key', function($post_id) {
             $key = get_post_meta($post_id, 'key', true);
             $htm = '';
             $htm .= '<strong>';
-            $htm .= $key;
+            $htm .= esc_html( $key );
             $htm .= '</strong>';
             $htm .= '<br>';
-            $htm .= '<button data-numq-copy="' . $key . '">Copy To Clipboard</button>';
+            $htm .= '<button data-numq-copy="' . esc_attr( $key ) . '">Copy To Clipboard</button>';
             return $htm;
         });
-		$this->metricriv->column->add('date', 'Date');
+		$this->metricriv->column->add('date', __( 'Date', 'metricriv' ));
 		$this->metricriv->init();
 	}
 
@@ -96,11 +100,11 @@ class MetricRiv {
 	public function adminMenu() {
 		$this->hook_metrics = add_menu_page('MetricRiv', 'MetricRiv', 'manage_options', $this->key_ . 'metrics', [$this, 'adminMetrics'], 'dashicons-admin-post', 30);
 
-        add_submenu_page($this->key_ . 'metrics', 'Metrics', 'Metrics', 'manage_options', $this->key_ . 'metrics');
-        $this->hook_metrics = add_submenu_page($this->key_ . 'metrics', 'Settings', 'Settings', 'manage_options', $this->key_ . 'settings', [$this, 'adminSettings']);
+        add_submenu_page($this->key_ . 'metrics', __( 'Metrics', 'metricriv' ), __( 'Metrics', 'metricriv' ), 'manage_options', $this->key_ . 'metrics');
+        $this->hook_metrics = add_submenu_page($this->key_ . 'metrics', __( 'Settings', 'metricriv' ), __( 'Settings', 'metricriv' ), 'manage_options', $this->key_ . 'settings', [$this, 'adminSettings']);
 
         $cpt_link = 'edit.php?post_type=' . $this->key_ . 'key';
-        add_submenu_page($this->key_ . 'metrics', 'Keys', 'Keys', 'manage_options', $cpt_link);
+        add_submenu_page($this->key_ . 'metrics', __( 'Keys', 'metricriv' ), __( 'Keys', 'metricriv' ), 'manage_options', $cpt_link);
 	}
 
 	public function adminMetrics() {
@@ -119,7 +123,7 @@ class MetricRiv {
         global $wp_locale;
 
 		$action = $this->key_ . 'settings';
-		$title = 'MetricRiv Settings';
+		$title = __( 'MetricRiv Settings', 'metricriv' );
 
         $timezone_string = get_option($this->key_ . 'timezone_string', 'use_wordpress');
 
@@ -266,7 +270,7 @@ class MetricRiv {
             if(!isset($output['value'])) {
                 $output['value'] = -1;
             }
-            echo json_encode($output);
+            echo wp_json_encode($output);
             exit;
         } else {
             $output = [];
@@ -275,7 +279,7 @@ class MetricRiv {
             $output['range'] = 'invalid';
             $output['start'] = 'invalid';
             $output['end'] = 'invalid';
-            echo json_encode($output);
+            echo wp_json_encode($output);
             exit;
         }
     }
@@ -284,9 +288,9 @@ class MetricRiv {
         $pass = true;
         $output = [];
         $output['status'] = 'error';
-        if(wp_verify_nonce($_POST['_wpnonce'], $this->key_ . 'settings')) {
+        if ( isset($_POST[ '_wpnonce' ]) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ '_wpnonce' ] ) ), $this->key_ . 'settings' ) ) {
             if(!isset($_POST['timezone_string'])) {
-                $output['messages'] = ['Please choose a valid Timezone setting.'];
+                $output['messages'] = [ __( 'Please choose a valid Timezone setting.', 'metricriv' ) ];
                 $pass = false;
             }
 
@@ -296,16 +300,16 @@ class MetricRiv {
                 update_option($this->key_ . 'timezone_string', $timezone_string, false);
 
                 $output['status'] = 'success';  
-                $output['messages'] = ['Values have been updated.'];
+                $output['messages'] = [ __( 'Values have been updated.', 'metricriv' ) ];
             } else {                        
                 $output['status'] = 'error';    
-                $output['messages'] = ['There was a problem processing the request. Please reload the page and try again.'];
+                $output['messages'] = [ __( 'There was a problem processing the request. Please reload the page and try again.', 'metricriv' ) ];
             }  
         } else {
             $output['status'] = 'error';    
-            $output['messages'] = ['There was a problem processing the request. Please reload the page and try again.'];
+            $output['messages'] = [ __( 'There was a problem processing the request. Please reload the page and try again.', 'metricriv' ) ];
         }
-        echo json_encode($output);
+        echo wp_json_encode($output);
         exit;
     }
 

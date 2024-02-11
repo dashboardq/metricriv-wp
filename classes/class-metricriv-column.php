@@ -274,8 +274,8 @@ class MetricRiv_Column {
 			$views[$key] .= ' class="current"'; 
 		}
 		$views[$key] .= '>'; 
-		$views[$key] .= __('All', $this->full_key); 
-		$views[$key] .= ' <span class="count">(' . $count . ')</span>'; 
+		$views[$key] .= esc_html__('All', 'metricriv'); 
+		$views[$key] .= ' <span class="count">(' . esc_html($count) . ')</span>'; 
 		$views[$key] .= '</a>'; 
 
 		for($i = 0; $i < count($this->filters); $i++) {
@@ -306,8 +306,8 @@ class MetricRiv_Column {
 					$views[$key] .= ' class="current"'; 
 				}
 				$views[$key] .= '>'; 
-				$views[$key] .= __($name, $this->full_key); 
-				$views[$key] .= ' <span class="count">(' . $count . ')</span>'; 
+				$views[$key] .= esc_html($name); 
+				$views[$key] .= ' <span class="count">(' . esc_html($count) . ')</span>'; 
 				$views[$key] .= '</a>'; 
 			}
 		}

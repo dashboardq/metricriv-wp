@@ -1,3 +1,4 @@
+<?php defined('ABSPATH') || exit; ?>
 <div class="wrap admin_tool_basic_page" id="<?php echo esc_attr($action); ?>_page">
 	<h1 class="wp-heading-inline"><?php echo esc_html($title); ?></h1>
 

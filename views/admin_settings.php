@@ -1,3 +1,4 @@
+<?php defined('ABSPATH') || exit; ?>
 <div class="wrap admin_tool_basic_page" id="<?php echo esc_attr($action); ?>_page">
 	<h1 class="wp-heading-inline"><?php echo esc_html($title); ?></h1>
 
@@ -24,6 +25,11 @@
                                         // Remove the default empty value selection value from the list.
                                         // Have the drop down either select the '' value if "use_wordpress"
                                         // is passed in or use the $timezone_string that was previously selected.
+
+                                        // The below code is the equivalent of echo wp_timezone_choice();
+                                        // The preg_replace simply replaces one of the items with ''     
+                                        // wp_timezone_choice is already escaped:
+                                        // https://github.com/WordPress/WordPress-Coding-Standards/issues/1904
                                         echo preg_replace('/<option selected="selected" value="">.*<\/option>/', '', wp_timezone_choice(($timezone_string == 'use_wordpress') ? '' : $timezone_string)); 
                                     ?>
                                 </select>
