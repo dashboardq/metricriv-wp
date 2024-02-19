@@ -5,7 +5,7 @@ Description: Provides a connection between WordPress and MetricRiv.com.
 Author: Anthony Graddy
 Author URI: https://www.dashboardq.com
 Plugin URI: https://github.com/dashboardq/metricriv-wp
-Version: 1.1.0
+Version: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: metricriv
@@ -40,7 +40,7 @@ require_once(__DIR__ . '/classes/class-metricriv-data-wp-users.php');
 class MetricRiv {
 	public $key = 'metricriv';
 	public $key_ = 'metricriv_';
-	public $version = '1.1.0';
+	public $version = '1.1.1';
 
 	public $cpt;
 	public $metricriv;

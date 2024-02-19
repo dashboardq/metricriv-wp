@@ -689,94 +689,96 @@ class MetricRiv_Type {
 
 	function wpSave($post_id) {
 		global $wpdb;
-		if(!empty($_POST)) {
-			$found = [];
-			for($i = 0; $i < count($this->details); $i++) {
-				$item = $this->details[$i];
-				//echo $item->key;
-				//echo '<br>';
-				if(
-					isset($_POST[$item->key]) 
-					&& is_array($_POST[$item->key]) 
-					&& (
-						$item->type == 'hidden'
-						|| $item->type == 'text'
-						|| $item->type == 'select'
-						|| strpos($item->type, 'select_') === 0
-						|| $item->type == 'checkbox'
-					)
-				) {
-					$output = [];
-					foreach($_POST[$item->key] as $input) {
-						array_push($output, sanitize_text_field($input));
-					}
-					update_post_meta($post_id, $item->key, $output);
-				} elseif(
-					isset($_POST[$item->key]) 
-					&& (
-						$item->type == 'hidden'
-						|| $item->type == 'text'
-						|| $item->type == 'select'
-						|| strpos($item->type, 'select_') === 0
-						|| $item->type == 'checkbox'
-					)
-				) {
-					update_post_meta($post_id, $item->key, sanitize_text_field( $_POST[$item->key]));
-				} elseif(
-					isset($_POST[$item->key])
-					&& $item->type == 'textarea'
-				) {
-					update_post_meta($post_id, $item->key, sanitize_textarea_field( $_POST[$item->key]));
-				} elseif(isset($_POST[$item->key]) && $item->type == 'radio' && !in_array($item->key, $found)) {
-					update_post_meta($post_id, $item->key, sanitize_text_field( $_POST[$item->key]));
-					// Make sure only checks once
-					array_push($found, $item->key);
-				} elseif(isset($_POST[$item->key . '_count']) && $item->type == 'radio' && !in_array($item->key, $found)) {
-					$count = sanitize_text_field($_POST[$item->key . '_count']);
-					$output = [];
-					for($j = 0; $j < $count; $j++) {
-						if(isset($_POST[$item->key . '_' . $j])) {
-							array_push($output, sanitize_text_field($_POST[$item->key . '_' . $j]));
-						} else {
-							array_push($output, '');
-						}
-					}
-					update_post_meta($post_id, $item->key, $output);
+        if ( isset($_POST[ '_wpnonce' ]) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ '_wpnonce' ] ) ), 'update-post_' . $post_id ) ) {
+            if(!empty($_POST)) {
+                $found = [];
+                for($i = 0; $i < count($this->details); $i++) {
+                    $item = $this->details[$i];
+                    //echo $item->key;
+                    //echo '<br>';
+                    if(
+                        isset($_POST[$item->key]) 
+                        && is_array($_POST[$item->key]) 
+                        && (
+                            $item->type == 'hidden'
+                            || $item->type == 'text'
+                            || $item->type == 'select'
+                            || strpos($item->type, 'select_') === 0
+                            || $item->type == 'checkbox'
+                        )
+                    ) {
+                        $output = [];
+                        foreach($_POST[$item->key] as $input) {
+                            array_push($output, sanitize_text_field($input));
+                        }
+                        update_post_meta($post_id, $item->key, $output);
+                    } elseif(
+                        isset($_POST[$item->key]) 
+                        && (
+                            $item->type == 'hidden'
+                            || $item->type == 'text'
+                            || $item->type == 'select'
+                            || strpos($item->type, 'select_') === 0
+                            || $item->type == 'checkbox'
+                        )
+                    ) {
+                        update_post_meta($post_id, $item->key, sanitize_text_field( $_POST[$item->key]));
+                    } elseif(
+                        isset($_POST[$item->key])
+                        && $item->type == 'textarea'
+                    ) {
+                        update_post_meta($post_id, $item->key, sanitize_textarea_field( $_POST[$item->key]));
+                    } elseif(isset($_POST[$item->key]) && $item->type == 'radio' && !in_array($item->key, $found)) {
+                        update_post_meta($post_id, $item->key, sanitize_text_field( $_POST[$item->key]));
+                        // Make sure only checks once
+                        array_push($found, $item->key);
+                    } elseif(isset($_POST[$item->key . '_count']) && $item->type == 'radio' && !in_array($item->key, $found)) {
+                        $count = sanitize_text_field($_POST[$item->key . '_count']);
+                        $output = [];
+                        for($j = 0; $j < $count; $j++) {
+                            if(isset($_POST[$item->key . '_' . $j])) {
+                                array_push($output, sanitize_text_field($_POST[$item->key . '_' . $j]));
+                            } else {
+                                array_push($output, '');
+                            }
+                        }
+                        update_post_meta($post_id, $item->key, $output);
 
-					// Make sure only checks once (radios are listed multiple times)
-					array_push($found, $item->key);
-				} elseif(isset($_POST[$item->key . '_count']) && $item->type == 'checkbox') {
-					$count = sanitize_text_field($_POST[$item->key . '_count']);
-					//echo $count;die;
-					$output = [];
-					for($j = 0; $j < $count; $j++) {
-						if(isset($_POST[$item->key . '_' . $j])) {
-							array_push($output, sanitize_text_field($_POST[$item->key . '_' . $j]));
-						} else {
-							array_push($output, '');
-						}
-					}
-					//print_r($output);die;
-					update_post_meta($post_id, $item->key, $output);
-				}
-			}
+                        // Make sure only checks once (radios are listed multiple times)
+                        array_push($found, $item->key);
+                    } elseif(isset($_POST[$item->key . '_count']) && $item->type == 'checkbox') {
+                        $count = sanitize_text_field($_POST[$item->key . '_count']);
+                        //echo $count;die;
+                        $output = [];
+                        for($j = 0; $j < $count; $j++) {
+                            if(isset($_POST[$item->key . '_' . $j])) {
+                                array_push($output, sanitize_text_field($_POST[$item->key . '_' . $j]));
+                            } else {
+                                array_push($output, '');
+                            }
+                        }
+                        //print_r($output);die;
+                        update_post_meta($post_id, $item->key, $output);
+                    }
+                }
 
-			for($i = 0; $i < count($this->associates); $i++) {
-				$item = $this->associates[$i];
-				if($item->extra[0] == 'get_the_title') {
-					$title = get_the_title(get_post_meta($post_id, $item->extra[1], true));
-					$where = array( 'ID' => $post_id );
-					$wpdb->update( $wpdb->posts, array( 'post_title' => $title ), $where );
-				}
-			}
+                for($i = 0; $i < count($this->associates); $i++) {
+                    $item = $this->associates[$i];
+                    if($item->extra[0] == 'get_the_title') {
+                        $title = get_the_title(get_post_meta($post_id, $item->extra[1], true));
+                        $where = array( 'ID' => $post_id );
+                        $wpdb->update( $wpdb->posts, array( 'post_title' => $title ), $where );
+                    }
+                }
 
-			if(isset($this->title_key) && isset($this->title_fn) && isset($_POST[$this->title_key])) {
-				$fn = $this->title_fn;
-				$title = $fn(sanitize_text_field($_POST[$this->title_key]));
-				$where = array( 'ID' => $post_id );
-				$wpdb->update( $wpdb->posts, array( 'post_title' => $title ), $where );
-			}
-		}
+                if(isset($this->title_key) && isset($this->title_fn) && isset($_POST[$this->title_key])) {
+                    $fn = $this->title_fn;
+                    $title = $fn(sanitize_text_field($_POST[$this->title_key]));
+                    $where = array( 'ID' => $post_id );
+                    $wpdb->update( $wpdb->posts, array( 'post_title' => $title ), $where );
+                }
+            }
+        }
 	}
 
 	function wpTitleHere($title , $post){

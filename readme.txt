@@ -7,7 +7,7 @@ Requires PHP:  7.4
 Requires at least: 4.0
 Tested up to: 6.4.2
 Tags: metrics, stats, revenue, report, woocommerce, statistics, metricriv
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: metricriv
@@ -32,6 +32,9 @@ Be careful to keep the MetricRiv keys private. Anyone with access to the keys wi
 5. Copy the key and use it when setting up a WordPress connection on MetricRiv.com.
 
 == Changelog ==
+
+= 1.1.1 =
+* Updates from review
 
 = 1.1.0 =
 * Updates from review
